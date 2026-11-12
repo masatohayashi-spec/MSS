@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Micro Learning</title>
+
+<style>
+body{
+    font-family:sans-serif;
+    max-width:800px;
+    margin:auto;
+    padding:20px;
+    text-align:center;
+    background:#f5f7fa;
+}
+
+.card{
+    background:white;
+    border-radius:15px;
+    padding:40px;
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+
+.word{
+    font-size:42px;
+    font-weight:bold;
+    color:#1976d2;
+}
+
+.meaning{
+    font-size:24px;
+    margin-top:15px;
+}
+
+button{
+    margin:8px;
+    padding:14px 25px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:18px;
+}
+
+.level1{background:#ef5350;color:white;}
+.level2{background:#ffa726;color:white;}
+.level3{background:#66bb6a;color:white;}
+.level4{background:#1976d2;color:white;}
+
+#progress{
+    margin-top:20px;
+    font-size:18px;
+}
+</style>
+</head>
+<body>
+
+<h1>マイクロラーニング</h1>
+
+<div class="card">
+
+<div id="word" class="word"></div>
+<div id="meaning" class="meaning"></div>
+
+<hr>
+
+<h3>今の理解度は？</h3>
+
+<button class="level1" onclick="answer(1)">
+知らない
+</button>
+
+<button class="level2" onclick="answer(2)">
+聞いたことがある
+</button>
+
+<button class="level3" onclick="answer(3)">
+わかる
+</button>
+
+<button class="level4" onclick="answer(4)">
+説明できる
+</button>
+
+<div id="progress"></div>
+
+</div>
+
+<script>
+
+const data = [
+
+{word:"ability", meaning:"能力"},
+{word:"important", meaning:"重要な"},
+{word:"develop", meaning:"発達させる"},
+{word:"environment", meaning:"環境"},
+{word:"community", meaning:"地域社会"}
+
+];
+
+let current = 0;
+
+let history =
+JSON.parse(localStorage.getItem("history") || "[]");
+
+function showQuestion(){
+
+if(current >= data.length){
+
+document.querySelector(".card").innerHTML = `
+<h2>本日の学習終了</h2>
+<p>お疲れさまでした。</p>
+<p>学習件数：${history.length}</p>
+`;
+
+return;
+}
+
+document.getElementById("word").textContent =
+data[current].word;
+
+document.getElementById("meaning").textContent =
+data[current].meaning;
+
+document.getElementById("progress").textContent =
+`${current + 1} / ${data.length}`;
+
+}
+
+function answer(level){
+
+history.push({
+date:new Date().toISOString(),
+word:data[current].word,
+level:level
+});
+
+localStorage.setItem(
+"history",
+JSON.stringify(history)
+);
+
+current++;
+showQuestion();
+}
+
+showQuestion();
+
+</script>
+
+</body>
+</html>
